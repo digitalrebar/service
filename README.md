@@ -1,4 +1,4 @@
-# service [![GoDoc](https://godoc.org/github.com/kardianos/service?status.svg)](https://godoc.org/github.com/kardianos/service)
+# service [![GoDoc](https://godoc.org/github.com/digitalrebar/service?status.svg)](https://godoc.org/github.com/kardianos/service)
 
 service will install / un-install, start / stop, and run a program as a service (daemon).
 Currently supports Windows XP+, Linux/(systemd | Upstart | SysV), and OSX/Launchd.
@@ -12,3 +12,6 @@ terminal or from a service manager.
 ## BUGS
  * Dependencies field is not implemented for Linux systems and Launchd.
  * OS X when running as a UserService Interactive will not be accurate.
+
+This is a fork of https://github.com/kardianos/service, with fixups to the systemd
+detection process work properly during the OS install process
