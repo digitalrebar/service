@@ -19,9 +19,17 @@ import (
 )
 
 func isSystemd() bool {
-	if _, err := os.Stat("/run/systemd/system"); err == nil {
-		return true
-	}
+	_, err := os.Stat("/etc/systemd/system")
+	return err == nil
+}
+
+type systemd struct {
+	i        Interface
+	platform string
+	*Config
+}
+
+func (s *systemd) isRunning() bool {
 	if _, err := os.Stat("/proc/1/comm"); err == nil {
 		filerc, err := os.Open("/proc/1/comm")
 		if err != nil {
@@ -38,12 +46,6 @@ func isSystemd() bool {
 		}
 	}
 	return false
-}
-
-type systemd struct {
-	i        Interface
-	platform string
-	*Config
 }
 
 func newSystemdService(i Interface, platform string, c *Config) (Service, error) {
@@ -186,10 +188,12 @@ func (s *systemd) Install() error {
 		return err
 	}
 
-	if s.Option.bool(optionUserService, optionUserServiceDefault) {
-		err = run("systemctl", "daemon-reload", "--user")
-	} else {
-		err = run("systemctl", "daemon-reload")
+	if s.isRunning() {
+		if s.Option.bool(optionUserService, optionUserServiceDefault) {
+			err = run("systemctl", "daemon-reload", "--user")
+		} else {
+			err = run("systemctl", "daemon-reload")
+		}
 	}
 	return err
 }
