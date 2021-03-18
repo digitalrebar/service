@@ -219,13 +219,10 @@ func (s *systemd) Uninstall() error {
 }
 
 func (s *systemd) Logger(errs chan<- error) (Logger, error) {
-	if system.Interactive() {
-		return ConsoleLogger, nil
-	}
-	return s.SystemLogger(errs)
+	return ConsoleLogger, nil
 }
 func (s *systemd) SystemLogger(errs chan<- error) (Logger, error) {
-	return newSysLogger(s.Name, errs)
+	return ConsoleLogger, nil
 }
 
 func (s *systemd) Run() (err error) {
